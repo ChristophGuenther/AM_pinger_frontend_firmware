@@ -3,7 +3,7 @@
  * to be used with Pinger Driver Board rev1
  *
  * Created: 24.03.2021
- * Author : Lars Weinstock, Christoph Günther
+ * Author : Lars Weinstock, Christoph Guenther
  */ 
 
 // TODO:
