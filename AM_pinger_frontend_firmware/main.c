@@ -19,17 +19,17 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define STAT_REG	0x10	      // Status register
+#define STAT_REG	0x10			// Status register
 #define S_TRG		  0		        // software trigger
-#define S_IO      1           // connect emitter (1) or receiver (0)
+#define S_IO      1					// connect emitter (1) or receiver (0)
 #define S_DIS		  2		        // discharge
 #define S_ADIS		3		        // discharge and disconnect automatically after sending
-#define S_CHRG    4           // charge
-#define S_DONE    5           // done charging
-volatile uint8_t	status_reg; // status register content
+#define S_CHRG    4					// charge
+#define S_DONE    5					// done charging
+volatile uint8_t	status_reg;		// status register content
 
-#define WVFRM_REG		  0x11	  // Waveform value register
-#define WVFRM_MAX_LEN	1500	  // 500 bytes frei fuer Variablen [Lars]
+#define WVFRM_REG		  0x11		// Waveform value register
+#define WVFRM_MAX_LEN	1500		// 500 bytes frei fuer Variablen [Lars]
 /*  Default waveform  */
 uint8_t wvfrm[WVFRM_MAX_LEN] = {0x09, 0x05, 0x06, 0x05, 0x09, 0x05, 0x06, 0x05, 0x09, 0x05};uint8_t wvfrm_cont[4] = {0x09, 0x05, 0x06, 0x05};
 #define LENL_REG	0x12	      // Waveform length register, low, high, 16 bit
