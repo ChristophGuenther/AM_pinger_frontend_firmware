@@ -21,3 +21,5 @@
 # ToDos:
   * make use of ICM trigger / time signals
   * capacitor voltage readout
+# Registers:
+ * ...
