@@ -3,7 +3,7 @@
  Written for Atmega 328p microcontroller (see https://www.microchip.com/en-us/product/ATmega328P).
  The pinger front end receives commands via SPI from the Mini-Mainboard and is responsible for generating the high-voltage pulses that drive the piezo trnasducer to generate acoustic signals. Main tasks of the firmware are:
  * control the switching regulator that charges the capacitors to ~300V
- * reads out their voltage
+ * read out their voltage
  * control the discharge of them
  * control the relais that connect either the receiver or emitter circuit to the piezo
  * control the full bridge driver that generates the HV rectangle singals that drive the piezo 
