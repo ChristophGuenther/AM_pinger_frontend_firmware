@@ -1,2 +1,2 @@
-# AM_pinger_frontend_firmware
+# Pinger Frontend Firmware
  Firmware for the pinger frontend of the IceCube acoustic module.
