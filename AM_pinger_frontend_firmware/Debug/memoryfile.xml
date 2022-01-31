@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="AM_pinger_frontend_firmware.elf">                 
+    <memory name="program">              
+      <units>bytes</units>                 
+      <length>32768</length>                 
+      <used>5038</used>                     
+      <free>27730</free>                     
+    </memory>                              
+    <memory name="data">                 
+      <units>bytes</units>                 
+      <length>2048</length>                 
+      <used>1522</used>                     
+      <free>526</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
