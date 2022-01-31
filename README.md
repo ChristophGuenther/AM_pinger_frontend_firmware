@@ -2,7 +2,7 @@
  Firmware for the pinger frontend of the IceCube acoustic module.
  Written for Atmega 328p microcontroller (see https://www.microchip.com/en-us/product/ATmega328P).
  
- # Change naotes:
+ # Change notes:
   * based on APU pinger frontend firmware
   * changed from I2C to SPI communication
   * changed external clock from 20MHz to 12MHz
