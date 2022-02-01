@@ -221,7 +221,7 @@ void wvfrm_out() {
 	uint16_t len = wvfrm_len;
 	
 	// uint8_t is_connected = 0;
-	// if (status_reg & (1<<S_ENA)) is_connected = 1; ??
+	// if (status_reg & (1<<S_ENA)) is_connected = 1; ?? can be removed
 	// else is_connected = 0;
 	
 	// continuous mode
@@ -270,23 +270,20 @@ void wvfrm_out() {
 	}
 	
 	// set output neutral again
-	// if (status_reg & (1<<S_ENA)) OUT_PORT = (OUT_NEUTRAL | (1 << SW_ENA)); ??
-	// else OUT_PORT = OUT_NEUTRAL;
 	OUT_PORT = OUT_NEUTRAL;
 	
-	// auto disconnect drivers if requested
+	// auto discharge drivers and disconnect if requested
 	if ( status_reg & (1 << S_ADIS) ) {
 		charge_off ();
-		discharge_on ();
-		connect_driver ();
-		//CTRL_PORT &= ~(1 << SW_ENA); // disconnect drivers
-		// status_reg |= (1 << S_DIS);
 		status_reg &= ~(1 << S_CHRG);
-		status_reg |= (1 << S_DIS);
-		status_reg |= (1 << S_IO);
 		status_reg &= ~(1 << S_DONE);
+		discharge_on ();
+		status_reg |= (1 << S_DIS);
+		// (dis)connect driver or leave as is?
+		// connect_driver ();
+		// status_reg |= (1 << S_IO);
 	}
-
+	
 	// clear trigger bit
 	status_reg &= ~(1<<S_TRG);
 	return;
