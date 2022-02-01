@@ -6,11 +6,12 @@
  * Author : Lars Weinstock, Christoph Guenther
  */ 
 
-// TODO:
+// TODO/Bugs:
 // use feedback voltage ADC
-// turn charge off at voltage
-// receiver interlock?
+// turn charge off at voltage (=set max voltage)
+// receiver interlock? (only be able to connect receiver if ... is fullfilled, e.g. V<..)
 // trigger interrupt from gpio
+// emitter is disconnected after sending one waveform
 
 // CPU clock
 #define F_CPU 12000000UL // 12 MHz external crystal, full swing max delay
@@ -19,38 +20,41 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define STAT_REG	0x10			// Status register
-#define S_TRG		  0		        // software trigger
-#define S_IO      1					// connect emitter (1) or receiver (0)
-#define S_DIS		  2		        // discharge
+// status register
+#define STAT_REG	0x10			// status register
+#define S_TRG		0		        // software trigger
+#define S_IO		1				// connect emitter (1) or receiver (0)
+#define S_DIS		2		        // discharge
 #define S_ADIS		3		        // discharge and disconnect automatically after sending
-#define S_CHRG    4					// charge
-#define S_DONE    5					// done charging
+#define S_CHRG		4				// charge
+#define S_DONE		5				// done charging
 volatile uint8_t	status_reg;		// status register content
 
-#define WVFRM_REG		  0x11		// Waveform value register
-#define WVFRM_MAX_LEN	1500		// 500 bytes frei fuer Variablen [Lars]
-/*  Default waveform  */
-uint8_t wvfrm[WVFRM_MAX_LEN] = {0x09, 0x05, 0x06, 0x05, 0x09, 0x05, 0x06, 0x05, 0x09, 0x05};uint8_t wvfrm_cont[4] = {0x09, 0x05, 0x06, 0x05};
-#define LENL_REG	0x12	      // Waveform length register, low, high, 16 bit
+// waveform registers
+#define WVFRM_REG		0x11		// waveform value register
+#define WVFRM_MAX_LEN	1500		// 500 bytes frei fuer Variablen [Lars], increase to 2000?
+
+// Default waveform
+uint8_t wvfrm[WVFRM_MAX_LEN] = {0x09, 0x05, 0x06, 0x05, 0x09, 0x05, 0x06, 0x05, 0x09, 0x05}; // waveform modeuint8_t wvfrm_cont[4] = {0x09, 0x05, 0x06, 0x05}; // continuous sine mode
+#define LENL_REG	0x12			// waveform length register, low, high, 16 bit
 #define LENH_REG	0x13
-volatile uint16_t	wvfrm_len;  // waveform length
-#define TICK_REG	0x14	      // Number of ticks per wavepoint, register
-volatile uint8_t	tick_reg;
-#define CRC_REG		0x20	      // Calculate CRC checksum from waveform, register
-#define TEST_REG	0x21	      // Debug
-volatile uint8_t echo;
-#define POSL_REG	0x22	      // Waveform position register, low, high, 16 bit
+volatile uint16_t	wvfrm_len;		// waveform length
+#define TICK_REG	0x14			// number of ticks per state register
+volatile uint8_t	tick_reg;		// number of ticks per state
+#define POSL_REG	0x22			// waveform position register, low, high, 16 bit
 #define POSH_REG	0x23
-volatile uint16_t	wvfrm_pos;#define N_SEND_REG 0x24       // define how often the waveform should be sent#define SEND_DELAY_REG 0x25   // define delay after each send#define SEND_MODE_REG 0x28    // control which send mode, continuous sine or arbitrary#define SEND_DURATION_REG 0x29// wveform duration in continuous modevolatile uint8_t n_send = 1;  // default one time sendingvolatile uint8_t send_delay=1;// ms delay after sending a waveformvolatile uint8_t send_mode=0; // send mode, 0=continuous, 1=arbitraryvolatile uint8_t send_duration=10; // ms, waveform duration in continuous mode#define CHECK_DONE_REG 0x26   // initiate check if done charging#define EPS_VOLT_REG 0x27     // read output voltage 
+volatile uint16_t	wvfrm_pos;		// waveform position (ith sample)#define N_SEND_REG 0x24				// how often the waveform should be sentvolatile uint8_t n_send = 1;		// default one time sending#define SEND_DELAY_REG 0x25			// delay after each sendvolatile uint8_t send_delay=1;		// ms delay after sending a waveform#define SEND_MODE_REG 0x28			// control which send mode, continuous sine or arbitraryvolatile uint8_t send_mode=0;		// send mode, 0=continuous, 1=arbitrary#define SEND_DURATION_REG 0x29		// waveform duration in continuous modevolatile uint8_t send_duration=10;	// ms, waveform duration in continuous mode// capacitor charger registers#define CHECK_DONE_REG 0x26			// initiate check if done charging#define EPS_VOLT_REG 0x27			// read output voltage#define CRC_REG		0x20			// calculate CRC checksum from waveform, register
+// test/debug register
+#define TEST_REG	0x21			// debug
+volatile uint8_t echo;
 /* Bridge controller definitions */
 // MOSFET Driver output port
 #define OUT_PORT	PORTD
 #define OUT_DDR		DDRD
-#define A1			  PORTD1 // lo HB A
-#define B1			  PORTD0 // lo HB B
-#define A2			  PORTD3 // hi HB A
-#define B2			  PORTD2 // hi HB B
+#define A1			  PORTD1 // aka lo HB A
+#define B1			  PORTD0 // aka lo HB B
+#define A2			  PORTD3 // aka hi HB A
+#define B2			  PORTD2 // aka hi HB B
 // Output states
 #define OUT_NEG_HV	0x06 // A1=0, B1=1, A2=1, B2=0
 #define OUT_NEUTRAL	0x05 // A1=1, B1=0, A2=1, B2=0
@@ -59,11 +63,11 @@ volatile uint16_t	wvfrm_pos;#define N_SEND_REG 0x24       // define how often 
 // Control port (en-/disable, (dis)connect, charge, ..)
 #define CTRL_PORT	PORTC
 #define CTRL_DDR	DDRC
-#define DIS       PORTC1 // discharge, 0 = discharge, output
-#define CHRG      PORTC2 // turn on charge, output
-#define DONE      PORTC3 // charge done, input
-#define EPS_FB    PORTC4 // feedback ADC, input
-#define SW_IO			PORTC5 // connect piezo to emitter (1) / receiver (0), output
+#define DIS			PORTC1 // discharge, 0 = discharge, output
+#define CHRG		PORTC2 // turn on charge, output
+#define DONE		PORTC3 // charge done, input
+#define EPS_FB		PORTC4 // feedback ADC, input
+#define SW_IO		PORTC5 // connect piezo to emitter (1) / receiver (0), output
 
 /* trigger definitions */
 // trigger/ time signal
@@ -71,16 +75,17 @@ volatile uint16_t	wvfrm_pos;#define N_SEND_REG 0x24       // define how often 
 #define GPIO_TRG PORTB0  // trigger from MMB, input
 #define CAL_TRIG PORTB1  // trigger from ICm, input
 
-// init functions
-void init_SPI(); // initialize SPI (slave mode)
-void init_GPIO();
-uint8_t crc8(uint8_t *addr, uint16_t len);
-void init_INT();
-void init_TCTN0();
-void init_ADC();
-void wvfrm_out();
+// (init) function prototypes
+void init_SPI();		// initialize SPI (slave mode)
+void init_GPIO();		// initialize GPIOs
+void init_INT();		// initialize interlock
+void init_TCTN0();		// initialize timer
+void init_ADC();		// initialize ADC
+void wvfrm_out();		// send a waveform
+uint8_t crc8(uint8_t *addr, uint16_t len); // calculate crc8 check sum
+volatile uint8_t crc8_check = 0xAB, calc_crc8 = 0, send_wvfm = 0;
 
-/* helper function prototypes */
+// helper function prototypes
 void charge_on();
 void charge_off();
 void discharge_on();
@@ -92,72 +97,71 @@ uint8_t read_voltage();
 
 // communication registers / values
 volatile uint8_t spi_buf, addr_ptr = 0x00, send_spi=0, data_rdy=0;
-#define READ_REQ   0x0F // read request
-#define WRITE_REQ  0xF0 // write request
-#define RW_UNSET   0    // read write undefined
-#define SPI_ACK    0xD0 // 208
-#define SPI_STOP   0xAA // end of communication
-#define NO_REG     0x00 // no register addressed
-volatile uint8_t crc8_check = 0xAB, calc_crc8 = 0, send_wvfm = 0, rw_request = 0;
+#define READ_REQ   0x0F		// read request
+#define WRITE_REQ  0xF0		// write request
+#define RW_UNSET   0		// read write undefined
+#define SPI_ACK    0xD0		// acknowledge, 208
+#define SPI_STOP   0xAA		// end of communication
+#define NO_REG     0x00		// no register addressed
+volatile uint8_t rw_request = 0;
 
 
 // main function
-int main(void)
-{
-	_delay_ms(1);
+int main (void) {
+	_delay_ms (1);
 	// Setup
-	cli();	init_GPIO();	init_SPI();
+	cli ();	init_GPIO ();	init_SPI ();
 	
-	// initialize full bridge GPIOS
+	// initialize full bridge GPIOS, moved to GPIO init
 	// OUT_DDR = 0xFF; // set as output
 	// OUT_PORT = OUT_NEUTRAL; // set to neutral
 	
 	// Set default register values
 	spi_buf=0, addr_ptr=0x00, rw_request=0x00, send_spi=0;
-	status_reg = (1 << S_ADIS); // default auto discharge
+	status_reg = (1 << S_ADIS); // default auto discharge enabled
 	wvfrm_len = 10;	// Default 10 sample sine
-	tick_reg = 21;	// f = 8.4 kHz
-	wvfrm_pos = 0;	// wvfrm_len;
+	tick_reg = 21;	// f = 8.4 kHz, check this again
+	wvfrm_pos = 0;
 	send_wvfm = 0;
 	
 	// Enable all interrupts
-	sei();
+	sei ();
 	
     /* Main loop */
     while (1) {
-			if (send_spi == 1) {
+			if (send_spi==1) {
 				
 				// Send waveform if flag is set
-				if (send_wvfm == 1) {
+				if (send_wvfm==1) {
 					wvfrm_out();
-					send_wvfm = 0;
+					send_wvfm=0;
 				}
 				
 				// Calculate CRC8, if flag is set
-				if (calc_crc8 == 1) {
+				if (calc_crc8==1) {
 					crc8_check = crc8(wvfrm, wvfrm_len);
-					calc_crc8 = 0;
+					calc_crc8=0;
 				}
 				
 				// send SPI data, move to top?
-				SPDR = spi_buf;
-				send_spi = 0;
+				SPDR=spi_buf;
+				send_spi=0;
 			}
-    }
-}
+    } // end while
+} // end main
 
 // initialize GPIOs
-void init_GPIO() {
+void init_GPIO () {
 	// full bridge port
-	OUT_DDR  = 0xFF;        // define as output
-	OUT_PORT = OUT_NEUTRAL; // set to neutral state
+	OUT_DDR  = 0xFF;				// define as output
+	OUT_PORT = OUT_NEUTRAL;			// set to neutral state
 	 
 	// control port
-	CTRL_DDR = 0x27;               // 0010 0111
-	CTRL_PORT &= ~(1 << CAL_TIME); // time signal low
-	CTRL_PORT &= ~(1 << DIS);      // default discharging
-	CTRL_PORT &= ~(1 << CHRG);     // charge off
-	CTRL_PORT |= (1 << SW_IO);     // connect to emitter
+	CTRL_DDR = 0x27;				// 0010 0111
+	CTRL_PORT &= ~(1 << CAL_TIME);	// time signal low
+	CTRL_PORT &= ~(1 << DIS);		// default discharging
+	CTRL_PORT &= ~(1 << CHRG);		// charge off
+	CTRL_PORT |= (1 << SW_IO);		// connect to emitter
 	
 	// TRG port
 	DDRB &= ~(1 << PINB0); // GPIO_TRG as input
@@ -165,25 +169,26 @@ void init_GPIO() {
 }
 
 // initialize spi as slave
-void init_SPI(void) {
+void init_SPI (void) {
 	// Pin I/O
-	DDRB |= (1 << PINB4); // MISO, output
-	DDRB &= ~(1 << PINB3); // MOSI, input
-	DDRB &= ~(1 << PINB2); // CS, input
-	DDRB &= ~(1 << PINB5); // SCK, input
+	DDRB |= (1 << PINB4);	// MISO, output
+	DDRB &= ~(1 << PINB3);	// MOSI, input
+	DDRB &= ~(1 << PINB2);	// CS, input
+	DDRB &= ~(1 << PINB5);	// SCK, input
 	
-	SPCR = 0b11000000; //  Enable SPI && interrupt enable bit
-	SPDR = 0xAA; // clear spi data register
+	SPCR = 0b11000000;		// Enable SPI && interrupt enable bit
+	SPDR = 0xAA;			// clear spi data register
 }
 
 // initialize ADC for EPS feedback
-void init_ADC() {
+void init_ADC () {
 	// Select Vref = AVcc, left-adjusted
 	ADMUX |= (1<<REFS0) | (1<<ADLAR);
 	//set prescaler to 128 and enable ADC, clock = 12 MHz / 128 = 93.75 kHz
 	ADCSRA |= (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0) | (1<<ADEN);
 }
 
+// reading a voltage value
 uint8_t read_voltage() {
 	//select ADC channel ADC4 with safety mask
 	ADMUX = (ADMUX & 0xF0) | (0x04 & 0x0F);
@@ -211,64 +216,69 @@ uint8_t crc8(uint8_t* addr, uint16_t len) {	// !!! Calculating CRC8 takes some t
 
 // waveform sending
 void wvfrm_out() {
-	uint8_t dt;
-	uint8_t dt_delay = send_delay;
+	uint8_t dt; // ticks per state
+	uint8_t dt_delay = send_delay; // delay after one waveform
 	uint16_t len = wvfrm_len;
+	
 	// uint8_t is_connected = 0;
-	// if (status_reg & (1<<S_ENA)) is_connected = 1;
+	// if (status_reg & (1<<S_ENA)) is_connected = 1; ??
 	// else is_connected = 0;
 	
 	// continuous mode
 	if (send_mode == 0x00) {
 		// Send waveform n times
-		uint16_t n_ticks_continuous = ( (send_duration&0x00FF) * 1000) / (1.25 * (tick_reg&0x00FF) + 0.72); // compute how many ticks are in wf duration, use calibration coefficients
-		uint8_t j = 0; // set jth waveform state
+		uint16_t n_ticks_continuous = ( (send_duration&0x00FF) * 1000) / (1.25 * (tick_reg&0x00FF) + 0.72); // compute how many ticks are in wf duration, use calibration coefficients, double check this!
+		uint8_t j = 0; // jth waveform state
+		
+		// loop over n waveforms
 		for (uint8_t n = 0; n < n_send; n++) {
 			dt_delay = send_delay; // set delay
-			PORTC |= (1 << CAL_TIME); // set cal time high during send
+			PORTC |= (1 << CAL_TIME); // set cal time pin high during send
+			// loop over waveform states
 			for (uint16_t i=0; i<n_ticks_continuous; i++) {
-				dt = tick_reg;			// Set number of ticks
+				dt = tick_reg; // Set number of ticks
 				if (j>3) j=0;
-				OUT_PORT = wvfrm_cont[j];	// Apply output state to port
+				OUT_PORT = wvfrm_cont[j]; // apply output state to port
 				j++;
-				while (dt--)			// Hold state for dt microsec
-				_delay_us(1);		// Alt. asm nop?
+				while (dt--) // hold state for dt microsec
+				_delay_us(1); // alternatively asm nop? [Lars]
 			}
-			PORTC &= ~(1 << CAL_TIME); // set cal time low after sending a waveform
+			PORTC &= ~(1 << CAL_TIME); // set cal time pin low after sending a waveform
 			OUT_PORT = OUT_NEUTRAL; // set port to neutral again
-			while(dt_delay--)
+			while(dt_delay--) // delay after waveform
 			_delay_ms(1);
 		}
 	}
+	
 	// arbitrary waveform mode
 	else if(send_mode == 0x01) {
-		// Send waveform n times
+		// loop over n waveforms
 		for (uint8_t n = 0; n < n_send; n++) {
 			dt_delay = send_delay; // set delay
-			PORTC |= (1 << CAL_TIME); // set cal time high during send
+			PORTC |= (1 << CAL_TIME); // set cal time pin high during send
 			for (uint16_t i = 0; i < len; i++) {
-				dt = tick_reg;			// Set number of ticks
-				OUT_PORT = wvfrm[i];	// Apply output state to port
-				while (dt--)			// Hold state for dt microsec
-				_delay_us(1);		// Alt. asm nop?
+				dt = tick_reg;			// set number of ticks
+				OUT_PORT = wvfrm[i];	// apply output state to port
+				while (dt--)			// hold state for dt microsec
+				_delay_us(1);		// alternatively asm nop? [Lars]
 			}
 			PORTC &= ~(1 << CAL_TIME); // set cal time low after sending a waveform
 			OUT_PORT = OUT_NEUTRAL; // set port to neutral again
-			while(dt_delay--)
+			while(dt_delay--) // delay after waveform
 			_delay_ms(1);
 		}
 	}
 	
 	// set output neutral again
-	// if (status_reg & (1<<S_ENA)) OUT_PORT = (OUT_NEUTRAL | (1 << SW_ENA));
+	// if (status_reg & (1<<S_ENA)) OUT_PORT = (OUT_NEUTRAL | (1 << SW_ENA)); ??
 	// else OUT_PORT = OUT_NEUTRAL;
 	OUT_PORT = OUT_NEUTRAL;
 	
-	// Auto disconnect drivers if requested.
+	// auto disconnect drivers if requested
 	if ( status_reg & (1 << S_ADIS) ) {
-		charge_off();
-		discharge_on();
-		connect_driver();
+		charge_off ();
+		discharge_on ();
+		connect_driver ();
 		//CTRL_PORT &= ~(1 << SW_ENA); // disconnect drivers
 		// status_reg |= (1 << S_DIS);
 		status_reg &= ~(1 << S_CHRG);
@@ -283,52 +293,60 @@ void wvfrm_out() {
 }
 
 // help functions for readability
-void charge_on() {
+void charge_on () {
 	CTRL_PORT |= (1 << CHRG);
 	return;
 }
 
-void charge_off() {
+void charge_off () {
 	CTRL_PORT &= ~(1 << CHRG);
 	return;
 }
 
-void discharge_on() {
+void discharge_on () {
 	CTRL_PORT &= ~(1 << DIS);
 	return;
 }
-void discharge_off() {
+void discharge_off () {
 	CTRL_PORT |= (1 << DIS);
 	return;
 }
 
-void connect_driver() {
+void connect_driver () {
 	CTRL_PORT |= (1 << SW_IO);
 	return;
 }
 
-void connect_receiver() {
+void connect_receiver () {
 	CTRL_PORT &= ~(1 << SW_IO);
 	return;
 }
 
-uint8_t is_charge_done() {
+uint8_t is_charge_done () {
 	if ( (PINC & (1 << CHRG)) == (1 << CHRG) ) {
 		return 0x01;
 	} else {
 		return 0x00;
 	}
 }
-// uint8_t read_voltage(); TBD
+// uint8_t read_voltage(); TODO
 
 // spi communication to MMB
 ISR (SPI_STC_vect) {
 	
+	// communication takes 3 steps:
+	//  - detect if read or write mode is requested
+	//  - which register should be read/written to?
+	//  - requested data are sent or received
+	
+	// wait until transfer complete
 	while ( ( SPSR & (1 << SPIF) ) );
 	spi_buf = SPDR;
 	
-	switch (rw_request) { // check if read or write was requested
-		// if RW mode unset read request from buffer
+	// check if read or write was requested
+	switch (rw_request) {
+		
+		// if RW mode is unset read request from buffer
 		case RW_UNSET:
 		switch(spi_buf) {
 			case READ_REQ: // read request
@@ -353,7 +371,9 @@ ISR (SPI_STC_vect) {
 		}
 		break;
 		
+		// read request
 		case READ_REQ:
+		// which address?
 		switch (addr_ptr) {
 			case NO_REG: // if no address selected yet read it from spi
 			addr_ptr = spi_buf;
@@ -454,7 +474,9 @@ ISR (SPI_STC_vect) {
 		}
 		break;
 		
+		// write request
 		case WRITE_REQ:
+		// which address?
 		switch (addr_ptr) {
 			case NO_REG:
 			addr_ptr = spi_buf;
@@ -493,7 +515,7 @@ ISR (SPI_STC_vect) {
 			break;
 			
 			case WVFRM_REG: // write waveform data
-			// Save wavepoint to waveform (check correct format first)
+			// Save state to waveform array (check validity first)
 			switch (spi_buf) {
 				case OUT_NEG_HV:
 				case OUT_NEUTRAL:
