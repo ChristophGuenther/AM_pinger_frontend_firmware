@@ -10,7 +10,7 @@
 // use feedback voltage ADC
 // turn charge off at selected voltage (=set max voltage)
 // receiver interlock? (only be able to connect receiver if ... is fullfilled, e.g. V<..)
-// trigger interrupt from gpio/ICM trigger signal
+// send on trigger signal (GPIO or ICM signal)
 // emitter is disconnected after sending one waveform
 
 // CPU clock
