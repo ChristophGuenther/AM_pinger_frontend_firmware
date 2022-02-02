@@ -267,7 +267,7 @@ void wvfrm_out() {
 	
 	// set output neutral again
 	OUT_PORT = OUT_NEUTRAL;
-	connect_driver();
+	// connect_driver();
 	
 	// auto discharge drivers and disconnect if requested
 	if ( status_reg & (1 << S_ADIS) ) {
@@ -317,7 +317,7 @@ void connect_receiver () {
 }
 
 uint8_t is_charge_done () {
-	if ( (PINC & (1 << CHRG)) == (1 << CHRG) ) {
+	if ( (PINC & (1 << CHRG)) == (1 << CHRG) ) { // better read DONE pin?
 		return 0x01;
 	} else {
 		return 0x00;
@@ -327,7 +327,7 @@ uint8_t is_charge_done () {
 
 // spi communication to MMB
 ISR (SPI_STC_vect) {
-	
+
 	// communication takes 3 steps:
 	//  - detect if read or write mode is requested
 	//  - which register should be read/written to?
