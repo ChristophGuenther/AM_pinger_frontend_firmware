@@ -8,9 +8,9 @@
 
 // TODO/Bugs:
 // use feedback voltage ADC
-// turn charge off at voltage (=set max voltage)
+// turn charge off at selected voltage (=set max voltage)
 // receiver interlock? (only be able to connect receiver if ... is fullfilled, e.g. V<..)
-// trigger interrupt from gpio
+// trigger interrupt from gpio/ICM trigger signal
 // emitter is disconnected after sending one waveform
 
 // CPU clock
@@ -56,44 +56,44 @@ volatile uint8_t echo;
 #define A2			  PORTD3 // aka hi HB A
 #define B2			  PORTD2 // aka hi HB B
 // Output states
-#define OUT_NEG_HV	0x06 // A1=0, B1=1, A2=1, B2=0
-#define OUT_NEUTRAL	0x05 // A1=1, B1=0, A2=1, B2=0
-#define OUT_POS_HV	0x09 // A1=1, B1=0, A2=0, B2=1
+#define OUT_NEG_HV	0x06	// A1=0, B1=1, A2=1, B2=0
+#define OUT_NEUTRAL	0x05	// A1=1, B1=0, A2=1, B2=0
+#define OUT_POS_HV	0x09	// A1=1, B1=0, A2=0, B2=1
 /* Control definitions */
 // Control port (en-/disable, (dis)connect, charge, ..)
 #define CTRL_PORT	PORTC
 #define CTRL_DDR	DDRC
-#define DIS			PORTC1 // discharge, 0 = discharge, output
-#define CHRG		PORTC2 // turn on charge, output
-#define DONE		PORTC3 // charge done, input
-#define EPS_FB		PORTC4 // feedback ADC, input
-#define SW_IO		PORTC5 // connect piezo to driver circuit (1) / receiver (0), output
+#define DIS			PORTC1	// discharge, 0 = discharge, output
+#define CHRG		PORTC2	// turn on charge, output
+#define DONE		PORTC3	// charge done, input
+#define EPS_FB		PORTC4	// feedback ADC, input
+#define SW_IO		PORTC5	// connect piezo to driver circuit (1) / receiver (0), output
 
 /* trigger definitions */
 // trigger/ time signal
-#define CAL_TIME PORTC0  // time signal to ICM, output
-#define GPIO_TRG PORTB0  // trigger from MMB, input
-#define CAL_TRIG PORTB1  // trigger from ICM, input
+#define CAL_TIME PORTC0		// time signal to ICM, output
+#define GPIO_TRG PORTB0		// trigger from MMB, input
+#define CAL_TRIG PORTB1		// trigger from ICM, input
 
 // (init) function prototypes
-void init_SPI();		// initialize SPI (slave mode)
-void init_GPIO();		// initialize GPIOs
-void init_INT();		// initialize interlock
-void init_TCTN0();		// initialize timer
-void init_ADC();		// initialize ADC
-void wvfrm_out();		// send a waveform
+void init_SPI();			// initialize SPI (slave mode)
+void init_GPIO();			// initialize GPIOs
+void init_INT();			// initialize interlock
+void init_TCTN0();			// initialize timer
+void init_ADC();			// initialize ADC
+void wvfrm_out();			// send a waveform
 uint8_t crc8(uint8_t *addr, uint16_t len); // calculate crc8 check sum
 volatile uint8_t crc8_check = 0xAB, calc_crc8 = 0, send_wvfm = 0;
 
 // helper function prototypes
-void charge_on();
-void charge_off();
-void discharge_on();
-void discharge_off();
-void connect_driver();
-void connect_receiver();
-uint8_t is_charge_done();
-uint8_t read_voltage();
+void charge_on();			// turn charging on
+void charge_off();			// turn chrging off
+void discharge_on();		// enable discharging
+void discharge_off();		// disable discharging
+void connect_driver();		// connect piezo to driver circuit
+void connect_receiver();	// connect piezo to receiver
+uint8_t is_charge_done();	// check if charging is done (TBD)
+uint8_t read_voltage();		// read capacitor voltage (TBD)
 
 // communication registers / values
 volatile uint8_t spi_buf, addr_ptr = 0x00, send_spi=0, data_rdy=0;
@@ -109,14 +109,10 @@ volatile uint8_t rw_request = 0;
 // main function
 int main (void) {
 	_delay_ms (1);
-	// Setup
+	// Initialization
 	cli ();	init_GPIO ();	init_SPI ();
 	
-	// initialize full bridge GPIOS, moved to GPIO init
-	// OUT_DDR = 0xFF; // set as output
-	// OUT_PORT = OUT_NEUTRAL; // set to neutral
-	
-	// Set default register values
+	// set default register values
 	spi_buf=0, addr_ptr=0x00, rw_request=0x00, send_spi=0;
 	status_reg = (1 << S_ADIS); // default auto discharge enabled
 	wvfrm_len = 10;	// Default 10 sample sine
@@ -124,26 +120,26 @@ int main (void) {
 	wvfrm_pos = 0;
 	send_wvfm = 0;
 	
-	// Enable all interrupts
+	// enable all interrupts
 	sei ();
 	
-    /* Main loop */
+    /* main loop */
     while (1) {
 			if (send_spi==1) {
 				
-				// Send waveform if flag is set
+				// send waveform if flag is set
 				if (send_wvfm==1) {
 					wvfrm_out();
 					send_wvfm=0;
 				}
 				
-				// Calculate CRC8, if flag is set
+				// calculate CRC8, if flag is set
 				if (calc_crc8==1) {
 					crc8_check = crc8(wvfrm, wvfrm_len);
 					calc_crc8=0;
 				}
 				
-				// send SPI data, move to top?
+				// send spi   data, move to top?
 				SPDR=spi_buf;
 				send_spi=0;
 			}
@@ -221,6 +217,7 @@ void wvfrm_out() {
 	uint16_t len = wvfrm_len;				// samples in one waveform
 	
 	// maybe check if driver is connected and disconnect after sending..
+	connect_driver();
 	
 	// continuous mode (sending sine burst of specific frequency and length)
 	if (send_mode == 0x00) {
@@ -241,8 +238,8 @@ void wvfrm_out() {
 				while (dt--)				// hold state for dt microsec
 				_delay_us(1);				// alternatively asm nop? [Lars]
 			}
-			PORTC &= ~(1 << CAL_TIME); // set cal time pin low after sending one waveform
-			while(dt_delay--) // delay after waveform
+			PORTC &= ~(1 << CAL_TIME);		// set cal time pin low after sending one waveform
+			while(dt_delay--)				// delay after waveform
 			_delay_ms(1);
 		}
 	}

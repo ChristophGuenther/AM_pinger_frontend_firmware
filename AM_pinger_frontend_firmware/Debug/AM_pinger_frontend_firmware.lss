@@ -13,11 +13,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000090  00000000  00000000  000014d3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000ff5  00000000  00000000  00001563  2**0
+  5 .debug_info   00000ff3  00000000  00000000  00001563  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000815  00000000  00000000  00002558  2**0
+  6 .debug_abbrev 00000815  00000000  00000000  00002556  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000ab3  00000000  00000000  00002d6d  2**0
+  7 .debug_line   00000ab3  00000000  00000000  00002d6b  2**0
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  0000016c  00000000  00000000  00003820  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -301,7 +301,7 @@ Disassembly of section .text:
 Disassembly of section .text:
 
 00000da8 <__bad_interrupt>:
- da8:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+ da8:	0c 94 00 00 	jmp	0	; 0x0 <__TEXT_REGION_ORIGIN__>
 
 Disassembly of section .text.init_GPIO:
 
@@ -535,155 +535,155 @@ Disassembly of section .text.wvfrm_out:
  68e:	cf 93       	push	r28
  690:	df 93       	push	r29
  692:	80 91 f0 06 	lds	r24, 0x06F0	; 0x8006f0 <send_delay>
- 696:	40 91 05 01 	lds	r20, 0x0105	; 0x800105 <wvfrm_len>
- 69a:	50 91 06 01 	lds	r21, 0x0106	; 0x800106 <wvfrm_len+0x1>
- 69e:	80 91 ef 06 	lds	r24, 0x06EF	; 0x8006ef <send_mode>
- 6a2:	81 11       	cpse	r24, r1
- 6a4:	64 c0       	rjmp	.+200    	; 0x76e <wvfrm_out+0xe8>
- 6a6:	20 91 ee 06 	lds	r18, 0x06EE	; 0x8006ee <send_duration>
- 6aa:	88 ee       	ldi	r24, 0xE8	; 232
- 6ac:	93 e0       	ldi	r25, 0x03	; 3
- 6ae:	28 9f       	mul	r18, r24
- 6b0:	e0 01       	movw	r28, r0
- 6b2:	29 9f       	mul	r18, r25
- 6b4:	d0 0d       	add	r29, r0
- 6b6:	11 24       	eor	r1, r1
- 6b8:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <tick_reg>
- 6bc:	70 e0       	ldi	r23, 0x00	; 0
- 6be:	80 e0       	ldi	r24, 0x00	; 0
- 6c0:	90 e0       	ldi	r25, 0x00	; 0
- 6c2:	0e 94 a0 05 	call	0xb40	; 0xb40 <__floatsisf>
- 6c6:	20 e0       	ldi	r18, 0x00	; 0
- 6c8:	30 e0       	ldi	r19, 0x00	; 0
- 6ca:	40 ea       	ldi	r20, 0xA0	; 160
- 6cc:	5f e3       	ldi	r21, 0x3F	; 63
- 6ce:	0e 94 cd 06 	call	0xd9a	; 0xd9a <__mulsf3>
- 6d2:	2c ee       	ldi	r18, 0xEC	; 236
- 6d4:	31 e5       	ldi	r19, 0x51	; 81
- 6d6:	48 e3       	ldi	r20, 0x38	; 56
- 6d8:	5f e3       	ldi	r21, 0x3F	; 63
- 6da:	0e 94 84 06 	call	0xd08	; 0xd08 <__addsf3>
- 6de:	6b 01       	movw	r12, r22
- 6e0:	7c 01       	movw	r14, r24
- 6e2:	be 01       	movw	r22, r28
- 6e4:	dd 0f       	add	r29, r29
- 6e6:	88 0b       	sbc	r24, r24
- 6e8:	99 0b       	sbc	r25, r25
- 6ea:	0e 94 a0 05 	call	0xb40	; 0xb40 <__floatsisf>
- 6ee:	a7 01       	movw	r20, r14
- 6f0:	96 01       	movw	r18, r12
- 6f2:	0e 94 c9 06 	call	0xd92	; 0xd92 <__divsf3>
- 6f6:	0e 94 db 05 	call	0xbb6	; 0xbb6 <__fixunssfsi>
- 6fa:	a0 e0       	ldi	r26, 0x00	; 0
- 6fc:	20 e0       	ldi	r18, 0x00	; 0
- 6fe:	32 c0       	rjmp	.+100    	; 0x764 <wvfrm_out+0xde>
- 700:	30 91 f0 06 	lds	r19, 0x06F0	; 0x8006f0 <send_delay>
- 704:	88 b1       	in	r24, 0x08	; 8
- 706:	81 60       	ori	r24, 0x01	; 1
- 708:	88 b9       	out	0x08, r24	; 8
- 70a:	40 e0       	ldi	r20, 0x00	; 0
- 70c:	50 e0       	ldi	r21, 0x00	; 0
- 70e:	17 c0       	rjmp	.+46     	; 0x73e <wvfrm_out+0xb8>
- 710:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <tick_reg>
- 714:	24 30       	cpi	r18, 0x04	; 4
- 716:	08 f0       	brcs	.+2      	; 0x71a <wvfrm_out+0x94>
- 718:	20 e0       	ldi	r18, 0x00	; 0
- 71a:	e2 2f       	mov	r30, r18
- 71c:	f0 e0       	ldi	r31, 0x00	; 0
- 71e:	ec 51       	subi	r30, 0x1C	; 28
- 720:	f9 4f       	sbci	r31, 0xF9	; 249
- 722:	90 81       	ld	r25, Z
- 724:	9b b9       	out	0x0b, r25	; 11
- 726:	2f 5f       	subi	r18, 0xFF	; 255
- 728:	04 c0       	rjmp	.+8      	; 0x732 <wvfrm_out+0xac>
- 72a:	84 e0       	ldi	r24, 0x04	; 4
- 72c:	8a 95       	dec	r24
- 72e:	f1 f7       	brne	.-4      	; 0x72c <wvfrm_out+0xa6>
- 730:	89 2f       	mov	r24, r25
- 732:	9f ef       	ldi	r25, 0xFF	; 255
- 734:	98 0f       	add	r25, r24
- 736:	81 11       	cpse	r24, r1
- 738:	f8 cf       	rjmp	.-16     	; 0x72a <wvfrm_out+0xa4>
- 73a:	4f 5f       	subi	r20, 0xFF	; 255
- 73c:	5f 4f       	sbci	r21, 0xFF	; 255
- 73e:	46 17       	cp	r20, r22
- 740:	57 07       	cpc	r21, r23
- 742:	30 f3       	brcs	.-52     	; 0x710 <wvfrm_out+0x8a>
- 744:	88 b1       	in	r24, 0x08	; 8
- 746:	8e 7f       	andi	r24, 0xFE	; 254
- 748:	88 b9       	out	0x08, r24	; 8
- 74a:	07 c0       	rjmp	.+14     	; 0x75a <wvfrm_out+0xd4>
- 74c:	e7 eb       	ldi	r30, 0xB7	; 183
- 74e:	fb e0       	ldi	r31, 0x0B	; 11
- 750:	31 97       	sbiw	r30, 0x01	; 1
- 752:	f1 f7       	brne	.-4      	; 0x750 <wvfrm_out+0xca>
- 754:	00 c0       	rjmp	.+0      	; 0x756 <wvfrm_out+0xd0>
- 756:	00 00       	nop
- 758:	38 2f       	mov	r19, r24
- 75a:	8f ef       	ldi	r24, 0xFF	; 255
- 75c:	83 0f       	add	r24, r19
- 75e:	31 11       	cpse	r19, r1
- 760:	f5 cf       	rjmp	.-22     	; 0x74c <wvfrm_out+0xc6>
- 762:	af 5f       	subi	r26, 0xFF	; 255
- 764:	80 91 f1 06 	lds	r24, 0x06F1	; 0x8006f1 <n_send>
- 768:	a8 17       	cp	r26, r24
- 76a:	50 f2       	brcs	.-108    	; 0x700 <wvfrm_out+0x7a>
- 76c:	38 c0       	rjmp	.+112    	; 0x7de <wvfrm_out+0x158>
- 76e:	80 91 ef 06 	lds	r24, 0x06EF	; 0x8006ef <send_mode>
- 772:	81 30       	cpi	r24, 0x01	; 1
- 774:	a1 f5       	brne	.+104    	; 0x7de <wvfrm_out+0x158>
- 776:	2e c0       	rjmp	.+92     	; 0x7d4 <wvfrm_out+0x14e>
- 778:	60 91 f0 06 	lds	r22, 0x06F0	; 0x8006f0 <send_delay>
- 77c:	88 b1       	in	r24, 0x08	; 8
- 77e:	81 60       	ori	r24, 0x01	; 1
- 780:	88 b9       	out	0x08, r24	; 8
- 782:	20 e0       	ldi	r18, 0x00	; 0
- 784:	30 e0       	ldi	r19, 0x00	; 0
- 786:	12 c0       	rjmp	.+36     	; 0x7ac <wvfrm_out+0x126>
- 788:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <tick_reg>
- 78c:	f9 01       	movw	r30, r18
- 78e:	e8 5f       	subi	r30, 0xF8	; 248
- 790:	fe 4f       	sbci	r31, 0xFE	; 254
- 792:	90 81       	ld	r25, Z
- 794:	9b b9       	out	0x0b, r25	; 11
- 796:	04 c0       	rjmp	.+8      	; 0x7a0 <wvfrm_out+0x11a>
- 798:	f4 e0       	ldi	r31, 0x04	; 4
- 79a:	fa 95       	dec	r31
- 79c:	f1 f7       	brne	.-4      	; 0x79a <wvfrm_out+0x114>
- 79e:	89 2f       	mov	r24, r25
- 7a0:	9f ef       	ldi	r25, 0xFF	; 255
- 7a2:	98 0f       	add	r25, r24
- 7a4:	81 11       	cpse	r24, r1
- 7a6:	f8 cf       	rjmp	.-16     	; 0x798 <wvfrm_out+0x112>
- 7a8:	2f 5f       	subi	r18, 0xFF	; 255
- 7aa:	3f 4f       	sbci	r19, 0xFF	; 255
- 7ac:	24 17       	cp	r18, r20
- 7ae:	35 07       	cpc	r19, r21
- 7b0:	58 f3       	brcs	.-42     	; 0x788 <wvfrm_out+0x102>
- 7b2:	88 b1       	in	r24, 0x08	; 8
- 7b4:	8e 7f       	andi	r24, 0xFE	; 254
- 7b6:	88 b9       	out	0x08, r24	; 8
- 7b8:	07 c0       	rjmp	.+14     	; 0x7c8 <wvfrm_out+0x142>
- 7ba:	e7 eb       	ldi	r30, 0xB7	; 183
- 7bc:	fb e0       	ldi	r31, 0x0B	; 11
- 7be:	31 97       	sbiw	r30, 0x01	; 1
- 7c0:	f1 f7       	brne	.-4      	; 0x7be <wvfrm_out+0x138>
- 7c2:	00 c0       	rjmp	.+0      	; 0x7c4 <wvfrm_out+0x13e>
- 7c4:	00 00       	nop
- 7c6:	68 2f       	mov	r22, r24
- 7c8:	8f ef       	ldi	r24, 0xFF	; 255
- 7ca:	86 0f       	add	r24, r22
- 7cc:	61 11       	cpse	r22, r1
- 7ce:	f5 cf       	rjmp	.-22     	; 0x7ba <wvfrm_out+0x134>
- 7d0:	7f 5f       	subi	r23, 0xFF	; 255
- 7d2:	01 c0       	rjmp	.+2      	; 0x7d6 <wvfrm_out+0x150>
- 7d4:	70 e0       	ldi	r23, 0x00	; 0
- 7d6:	80 91 f1 06 	lds	r24, 0x06F1	; 0x8006f1 <n_send>
- 7da:	78 17       	cp	r23, r24
- 7dc:	68 f2       	brcs	.-102    	; 0x778 <wvfrm_out+0xf2>
- 7de:	85 e0       	ldi	r24, 0x05	; 5
- 7e0:	8b b9       	out	0x0b, r24	; 11
- 7e2:	0e 94 c1 06 	call	0xd82	; 0xd82 <connect_driver>
+ 696:	c0 91 05 01 	lds	r28, 0x0105	; 0x800105 <wvfrm_len>
+ 69a:	d0 91 06 01 	lds	r29, 0x0106	; 0x800106 <wvfrm_len+0x1>
+ 69e:	0e 94 c1 06 	call	0xd82	; 0xd82 <connect_driver>
+ 6a2:	80 91 ef 06 	lds	r24, 0x06EF	; 0x8006ef <send_mode>
+ 6a6:	81 11       	cpse	r24, r1
+ 6a8:	64 c0       	rjmp	.+200    	; 0x772 <wvfrm_out+0xec>
+ 6aa:	20 91 ee 06 	lds	r18, 0x06EE	; 0x8006ee <send_duration>
+ 6ae:	88 ee       	ldi	r24, 0xE8	; 232
+ 6b0:	93 e0       	ldi	r25, 0x03	; 3
+ 6b2:	28 9f       	mul	r18, r24
+ 6b4:	e0 01       	movw	r28, r0
+ 6b6:	29 9f       	mul	r18, r25
+ 6b8:	d0 0d       	add	r29, r0
+ 6ba:	11 24       	eor	r1, r1
+ 6bc:	60 91 04 01 	lds	r22, 0x0104	; 0x800104 <tick_reg>
+ 6c0:	70 e0       	ldi	r23, 0x00	; 0
+ 6c2:	80 e0       	ldi	r24, 0x00	; 0
+ 6c4:	90 e0       	ldi	r25, 0x00	; 0
+ 6c6:	0e 94 a0 05 	call	0xb40	; 0xb40 <__floatsisf>
+ 6ca:	20 e0       	ldi	r18, 0x00	; 0
+ 6cc:	30 e0       	ldi	r19, 0x00	; 0
+ 6ce:	40 ea       	ldi	r20, 0xA0	; 160
+ 6d0:	5f e3       	ldi	r21, 0x3F	; 63
+ 6d2:	0e 94 cd 06 	call	0xd9a	; 0xd9a <__mulsf3>
+ 6d6:	2c ee       	ldi	r18, 0xEC	; 236
+ 6d8:	31 e5       	ldi	r19, 0x51	; 81
+ 6da:	48 e3       	ldi	r20, 0x38	; 56
+ 6dc:	5f e3       	ldi	r21, 0x3F	; 63
+ 6de:	0e 94 84 06 	call	0xd08	; 0xd08 <__addsf3>
+ 6e2:	6b 01       	movw	r12, r22
+ 6e4:	7c 01       	movw	r14, r24
+ 6e6:	be 01       	movw	r22, r28
+ 6e8:	dd 0f       	add	r29, r29
+ 6ea:	88 0b       	sbc	r24, r24
+ 6ec:	99 0b       	sbc	r25, r25
+ 6ee:	0e 94 a0 05 	call	0xb40	; 0xb40 <__floatsisf>
+ 6f2:	a7 01       	movw	r20, r14
+ 6f4:	96 01       	movw	r18, r12
+ 6f6:	0e 94 c9 06 	call	0xd92	; 0xd92 <__divsf3>
+ 6fa:	0e 94 db 05 	call	0xbb6	; 0xbb6 <__fixunssfsi>
+ 6fe:	a0 e0       	ldi	r26, 0x00	; 0
+ 700:	20 e0       	ldi	r18, 0x00	; 0
+ 702:	32 c0       	rjmp	.+100    	; 0x768 <wvfrm_out+0xe2>
+ 704:	30 91 f0 06 	lds	r19, 0x06F0	; 0x8006f0 <send_delay>
+ 708:	88 b1       	in	r24, 0x08	; 8
+ 70a:	81 60       	ori	r24, 0x01	; 1
+ 70c:	88 b9       	out	0x08, r24	; 8
+ 70e:	40 e0       	ldi	r20, 0x00	; 0
+ 710:	50 e0       	ldi	r21, 0x00	; 0
+ 712:	17 c0       	rjmp	.+46     	; 0x742 <wvfrm_out+0xbc>
+ 714:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <tick_reg>
+ 718:	24 30       	cpi	r18, 0x04	; 4
+ 71a:	08 f0       	brcs	.+2      	; 0x71e <wvfrm_out+0x98>
+ 71c:	20 e0       	ldi	r18, 0x00	; 0
+ 71e:	e2 2f       	mov	r30, r18
+ 720:	f0 e0       	ldi	r31, 0x00	; 0
+ 722:	ec 51       	subi	r30, 0x1C	; 28
+ 724:	f9 4f       	sbci	r31, 0xF9	; 249
+ 726:	90 81       	ld	r25, Z
+ 728:	9b b9       	out	0x0b, r25	; 11
+ 72a:	2f 5f       	subi	r18, 0xFF	; 255
+ 72c:	04 c0       	rjmp	.+8      	; 0x736 <wvfrm_out+0xb0>
+ 72e:	84 e0       	ldi	r24, 0x04	; 4
+ 730:	8a 95       	dec	r24
+ 732:	f1 f7       	brne	.-4      	; 0x730 <wvfrm_out+0xaa>
+ 734:	89 2f       	mov	r24, r25
+ 736:	9f ef       	ldi	r25, 0xFF	; 255
+ 738:	98 0f       	add	r25, r24
+ 73a:	81 11       	cpse	r24, r1
+ 73c:	f8 cf       	rjmp	.-16     	; 0x72e <wvfrm_out+0xa8>
+ 73e:	4f 5f       	subi	r20, 0xFF	; 255
+ 740:	5f 4f       	sbci	r21, 0xFF	; 255
+ 742:	46 17       	cp	r20, r22
+ 744:	57 07       	cpc	r21, r23
+ 746:	30 f3       	brcs	.-52     	; 0x714 <wvfrm_out+0x8e>
+ 748:	88 b1       	in	r24, 0x08	; 8
+ 74a:	8e 7f       	andi	r24, 0xFE	; 254
+ 74c:	88 b9       	out	0x08, r24	; 8
+ 74e:	07 c0       	rjmp	.+14     	; 0x75e <wvfrm_out+0xd8>
+ 750:	e7 eb       	ldi	r30, 0xB7	; 183
+ 752:	fb e0       	ldi	r31, 0x0B	; 11
+ 754:	31 97       	sbiw	r30, 0x01	; 1
+ 756:	f1 f7       	brne	.-4      	; 0x754 <wvfrm_out+0xce>
+ 758:	00 c0       	rjmp	.+0      	; 0x75a <wvfrm_out+0xd4>
+ 75a:	00 00       	nop
+ 75c:	38 2f       	mov	r19, r24
+ 75e:	8f ef       	ldi	r24, 0xFF	; 255
+ 760:	83 0f       	add	r24, r19
+ 762:	31 11       	cpse	r19, r1
+ 764:	f5 cf       	rjmp	.-22     	; 0x750 <wvfrm_out+0xca>
+ 766:	af 5f       	subi	r26, 0xFF	; 255
+ 768:	80 91 f1 06 	lds	r24, 0x06F1	; 0x8006f1 <n_send>
+ 76c:	a8 17       	cp	r26, r24
+ 76e:	50 f2       	brcs	.-108    	; 0x704 <wvfrm_out+0x7e>
+ 770:	38 c0       	rjmp	.+112    	; 0x7e2 <wvfrm_out+0x15c>
+ 772:	80 91 ef 06 	lds	r24, 0x06EF	; 0x8006ef <send_mode>
+ 776:	81 30       	cpi	r24, 0x01	; 1
+ 778:	a1 f5       	brne	.+104    	; 0x7e2 <wvfrm_out+0x15c>
+ 77a:	2e c0       	rjmp	.+92     	; 0x7d8 <wvfrm_out+0x152>
+ 77c:	40 91 f0 06 	lds	r20, 0x06F0	; 0x8006f0 <send_delay>
+ 780:	88 b1       	in	r24, 0x08	; 8
+ 782:	81 60       	ori	r24, 0x01	; 1
+ 784:	88 b9       	out	0x08, r24	; 8
+ 786:	20 e0       	ldi	r18, 0x00	; 0
+ 788:	30 e0       	ldi	r19, 0x00	; 0
+ 78a:	12 c0       	rjmp	.+36     	; 0x7b0 <wvfrm_out+0x12a>
+ 78c:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <tick_reg>
+ 790:	f9 01       	movw	r30, r18
+ 792:	e8 5f       	subi	r30, 0xF8	; 248
+ 794:	fe 4f       	sbci	r31, 0xFE	; 254
+ 796:	90 81       	ld	r25, Z
+ 798:	9b b9       	out	0x0b, r25	; 11
+ 79a:	04 c0       	rjmp	.+8      	; 0x7a4 <wvfrm_out+0x11e>
+ 79c:	f4 e0       	ldi	r31, 0x04	; 4
+ 79e:	fa 95       	dec	r31
+ 7a0:	f1 f7       	brne	.-4      	; 0x79e <wvfrm_out+0x118>
+ 7a2:	89 2f       	mov	r24, r25
+ 7a4:	9f ef       	ldi	r25, 0xFF	; 255
+ 7a6:	98 0f       	add	r25, r24
+ 7a8:	81 11       	cpse	r24, r1
+ 7aa:	f8 cf       	rjmp	.-16     	; 0x79c <wvfrm_out+0x116>
+ 7ac:	2f 5f       	subi	r18, 0xFF	; 255
+ 7ae:	3f 4f       	sbci	r19, 0xFF	; 255
+ 7b0:	2c 17       	cp	r18, r28
+ 7b2:	3d 07       	cpc	r19, r29
+ 7b4:	58 f3       	brcs	.-42     	; 0x78c <wvfrm_out+0x106>
+ 7b6:	88 b1       	in	r24, 0x08	; 8
+ 7b8:	8e 7f       	andi	r24, 0xFE	; 254
+ 7ba:	88 b9       	out	0x08, r24	; 8
+ 7bc:	07 c0       	rjmp	.+14     	; 0x7cc <wvfrm_out+0x146>
+ 7be:	e7 eb       	ldi	r30, 0xB7	; 183
+ 7c0:	fb e0       	ldi	r31, 0x0B	; 11
+ 7c2:	31 97       	sbiw	r30, 0x01	; 1
+ 7c4:	f1 f7       	brne	.-4      	; 0x7c2 <wvfrm_out+0x13c>
+ 7c6:	00 c0       	rjmp	.+0      	; 0x7c8 <wvfrm_out+0x142>
+ 7c8:	00 00       	nop
+ 7ca:	48 2f       	mov	r20, r24
+ 7cc:	8f ef       	ldi	r24, 0xFF	; 255
+ 7ce:	84 0f       	add	r24, r20
+ 7d0:	41 11       	cpse	r20, r1
+ 7d2:	f5 cf       	rjmp	.-22     	; 0x7be <wvfrm_out+0x138>
+ 7d4:	5f 5f       	subi	r21, 0xFF	; 255
+ 7d6:	01 c0       	rjmp	.+2      	; 0x7da <wvfrm_out+0x154>
+ 7d8:	50 e0       	ldi	r21, 0x00	; 0
+ 7da:	80 91 f1 06 	lds	r24, 0x06F1	; 0x8006f1 <n_send>
+ 7de:	58 17       	cp	r21, r24
+ 7e0:	68 f2       	brcs	.-102    	; 0x77c <wvfrm_out+0xf6>
+ 7e2:	85 e0       	ldi	r24, 0x05	; 5
+ 7e4:	8b b9       	out	0x0b, r24	; 11
  7e6:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <status_reg>
  7ea:	83 ff       	sbrs	r24, 3
  7ec:	13 c0       	rjmp	.+38     	; 0x814 <__DATA_REGION_LENGTH__+0x14>
@@ -721,7 +721,7 @@ Disassembly of section .text.main:
  ab8:	f8 94       	cli
  aba:	0e 94 48 06 	call	0xc90	; 0xc90 <init_GPIO>
  abe:	0e 94 61 06 	call	0xcc2	; 0xcc2 <init_SPI>
- ac2:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
+ ac2:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
  ac6:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  aca:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  ace:	10 92 e9 06 	sts	0x06E9, r1	; 0x8006e9 <send_spi>
@@ -755,7 +755,7 @@ Disassembly of section .text.main:
  b24:	0e 94 2c 06 	call	0xc58	; 0xc58 <crc8>
  b28:	80 93 ed 06 	sts	0x06ED, r24	; 0x8006ed <crc8_check>
  b2c:	10 92 ec 06 	sts	0x06EC, r1	; 0x8006ec <calc_crc8>
- b30:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ b30:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  b34:	8e bd       	out	0x2e, r24	; 46
  b36:	10 92 e9 06 	sts	0x06E9, r1	; 0x8006e9 <send_spi>
  b3a:	de cf       	rjmp	.-68     	; 0xaf8 <main+0x4c>
@@ -781,7 +781,7 @@ Disassembly of section .text.is_charge_done:
 }
 
 uint8_t is_charge_done () {
-	if ( (PINC & (1 << CHRG)) == (1 << CHRG) ) {
+	if ( (PINC & (1 << CHRG)) == (1 << CHRG) ) { // better read DONE pin?
  d3e:	96 b1       	in	r25, 0x06	; 6
  d40:	89 2f       	mov	r24, r25
  d42:	84 70       	andi	r24, 0x04	; 4
@@ -824,7 +824,7 @@ Disassembly of section .text.__vector_17:
  1ac:	07 fc       	sbrc	r0, 7
  1ae:	fd cf       	rjmp	.-6      	; 0x1aa <__vector_17+0x22>
  1b0:	8e b5       	in	r24, 0x2e	; 46
- 1b2:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 1b2:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  1b6:	80 91 e8 06 	lds	r24, 0x06E8	; 0x8006e8 <rw_request>
  1ba:	8f 30       	cpi	r24, 0x0F	; 15
  1bc:	79 f1       	breq	.+94     	; 0x21c <__vector_17+0x94>
@@ -833,31 +833,31 @@ Disassembly of section .text.__vector_17:
  1c2:	e7 c0       	rjmp	.+462    	; 0x392 <__vector_17+0x20a>
  1c4:	81 11       	cpse	r24, r1
  1c6:	4e c2       	rjmp	.+1180   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 1c8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 1c8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  1cc:	8f 30       	cpi	r24, 0x0F	; 15
  1ce:	19 f0       	breq	.+6      	; 0x1d6 <__vector_17+0x4e>
  1d0:	80 3f       	cpi	r24, 0xF0	; 240
  1d2:	71 f0       	breq	.+28     	; 0x1f0 <__vector_17+0x68>
  1d4:	1a c0       	rjmp	.+52     	; 0x20a <__vector_17+0x82>
- 1d6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 1d6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  1da:	80 93 e8 06 	sts	0x06E8, r24	; 0x8006e8 <rw_request>
  1de:	8a ef       	ldi	r24, 0xFA	; 250
- 1e0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 1e0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  1e4:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  1e8:	81 e0       	ldi	r24, 0x01	; 1
  1ea:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  1ee:	3a c2       	rjmp	.+1140   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 1f0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 1f0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  1f4:	80 93 e8 06 	sts	0x06E8, r24	; 0x8006e8 <rw_request>
  1f8:	8b ef       	ldi	r24, 0xFB	; 251
- 1fa:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 1fa:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  1fe:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  202:	81 e0       	ldi	r24, 0x01	; 1
  204:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  208:	2d c2       	rjmp	.+1114   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  20a:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  20e:	8f ef       	ldi	r24, 0xFF	; 255
- 210:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 210:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  214:	81 e0       	ldi	r24, 0x01	; 1
  216:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  21a:	24 c2       	rjmp	.+1096   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
@@ -872,22 +872,22 @@ Disassembly of section .text.__vector_17:
  22e:	ec 5c       	subi	r30, 0xCC	; 204
  230:	ff 4f       	sbci	r31, 0xFF	; 255
  232:	0c 94 ab 06 	jmp	0xd56	; 0xd56 <__tablejump2__>
- 236:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 236:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  23a:	80 93 ea 06 	sts	0x06EA, r24	; 0x8006ea <addr_ptr>
  23e:	80 ed       	ldi	r24, 0xD0	; 208
- 240:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 240:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  244:	81 e0       	ldi	r24, 0x01	; 1
  246:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  24a:	0c c2       	rjmp	.+1048   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  24c:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <status_reg>
- 250:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 250:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  254:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  258:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  25c:	81 e0       	ldi	r24, 0x01	; 1
  25e:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  262:	00 c2       	rjmp	.+1024   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  264:	80 91 08 01 	lds	r24, 0x0108	; 0x800108 <_end>
- 268:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 268:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  26c:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  270:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  274:	81 e0       	ldi	r24, 0x01	; 1
@@ -895,7 +895,7 @@ Disassembly of section .text.__vector_17:
  27a:	f4 c1       	rjmp	.+1000   	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  27c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <wvfrm_len>
  280:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <wvfrm_len+0x1>
- 284:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 284:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  288:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  28c:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  290:	81 e0       	ldi	r24, 0x01	; 1
@@ -903,21 +903,21 @@ Disassembly of section .text.__vector_17:
  296:	e6 c1       	rjmp	.+972    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  298:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <wvfrm_len>
  29c:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <wvfrm_len+0x1>
- 2a0:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <_edata>
+ 2a0:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <__DATA_REGION_ORIGIN__>
  2a4:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  2a8:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  2ac:	81 e0       	ldi	r24, 0x01	; 1
  2ae:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  2b2:	d8 c1       	rjmp	.+944    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  2b4:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <tick_reg>
- 2b8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 2b8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  2bc:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  2c0:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  2c4:	81 e0       	ldi	r24, 0x01	; 1
  2c6:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  2ca:	cc c1       	rjmp	.+920    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  2cc:	80 91 ed 06 	lds	r24, 0x06ED	; 0x8006ed <crc8_check>
- 2d0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 2d0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  2d4:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  2d8:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  2dc:	81 e0       	ldi	r24, 0x01	; 1
@@ -925,7 +925,7 @@ Disassembly of section .text.__vector_17:
  2e2:	c0 c1       	rjmp	.+896    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  2e4:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <wvfrm_pos>
  2e8:	90 91 02 01 	lds	r25, 0x0102	; 0x800102 <wvfrm_pos+0x1>
- 2ec:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 2ec:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  2f0:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  2f4:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  2f8:	81 e0       	ldi	r24, 0x01	; 1
@@ -933,42 +933,42 @@ Disassembly of section .text.__vector_17:
  2fe:	b2 c1       	rjmp	.+868    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  300:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <wvfrm_pos>
  304:	90 91 02 01 	lds	r25, 0x0102	; 0x800102 <wvfrm_pos+0x1>
- 308:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <_edata>
+ 308:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <__DATA_REGION_ORIGIN__>
  30c:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  310:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  314:	81 e0       	ldi	r24, 0x01	; 1
  316:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  31a:	a4 c1       	rjmp	.+840    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  31c:	80 91 f1 06 	lds	r24, 0x06F1	; 0x8006f1 <n_send>
- 320:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 320:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  324:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  328:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  32c:	81 e0       	ldi	r24, 0x01	; 1
  32e:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  332:	98 c1       	rjmp	.+816    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  334:	80 91 f0 06 	lds	r24, 0x06F0	; 0x8006f0 <send_delay>
- 338:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 338:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  33c:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  340:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  344:	81 e0       	ldi	r24, 0x01	; 1
  346:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  34a:	8c c1       	rjmp	.+792    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  34c:	80 91 ef 06 	lds	r24, 0x06EF	; 0x8006ef <send_mode>
- 350:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 350:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  354:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  358:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  35c:	81 e0       	ldi	r24, 0x01	; 1
  35e:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  362:	80 c1       	rjmp	.+768    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  364:	80 91 ee 06 	lds	r24, 0x06EE	; 0x8006ee <send_duration>
- 368:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 368:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  36c:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  370:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  374:	81 e0       	ldi	r24, 0x01	; 1
  376:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  37a:	74 c1       	rjmp	.+744    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  37c:	8e ef       	ldi	r24, 0xFE	; 254
- 37e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 37e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  382:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  386:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  38a:	81 e0       	ldi	r24, 0x01	; 1
@@ -985,14 +985,14 @@ Disassembly of section .text.__vector_17:
  3a4:	e2 5a       	subi	r30, 0xA2	; 162
  3a6:	ff 4f       	sbci	r31, 0xFF	; 255
  3a8:	0c 94 ab 06 	jmp	0xd56	; 0xd56 <__tablejump2__>
- 3ac:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 3ac:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  3b0:	80 93 ea 06 	sts	0x06EA, r24	; 0x8006ea <addr_ptr>
  3b4:	80 ed       	ldi	r24, 0xD0	; 208
- 3b6:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 3b6:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  3ba:	81 e0       	ldi	r24, 0x01	; 1
  3bc:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  3c0:	51 c1       	rjmp	.+674    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 3c2:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 3c2:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  3c6:	8f 71       	andi	r24, 0x1F	; 31
  3c8:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <status_reg>
  3cc:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <status_reg>
@@ -1019,13 +1019,13 @@ Disassembly of section .text.__vector_17:
  40a:	02 c0       	rjmp	.+4      	; 0x410 <__EEPROM_REGION_LENGTH__+0x10>
  40c:	0e 94 b5 06 	call	0xd6a	; 0xd6a <charge_off>
  410:	80 ed       	ldi	r24, 0xD0	; 208
- 412:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 412:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  416:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  41a:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  41e:	81 e0       	ldi	r24, 0x01	; 1
  420:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  424:	1f c1       	rjmp	.+574    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 426:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 426:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  42a:	89 30       	cpi	r24, 0x09	; 9
  42c:	41 f0       	breq	.+16     	; 0x43e <__EEPROM_REGION_LENGTH__+0x3e>
  42e:	20 f4       	brcc	.+8      	; 0x438 <__EEPROM_REGION_LENGTH__+0x38>
@@ -1038,7 +1038,7 @@ Disassembly of section .text.__vector_17:
  43c:	16 c0       	rjmp	.+44     	; 0x46a <__EEPROM_REGION_LENGTH__+0x6a>
  43e:	e0 91 01 01 	lds	r30, 0x0101	; 0x800101 <wvfrm_pos>
  442:	f0 91 02 01 	lds	r31, 0x0102	; 0x800102 <wvfrm_pos+0x1>
- 446:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 446:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  44a:	e8 5f       	subi	r30, 0xF8	; 248
  44c:	fe 4f       	sbci	r31, 0xFE	; 254
  44e:	80 83       	st	Z, r24
@@ -1046,7 +1046,7 @@ Disassembly of section .text.__vector_17:
  452:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <wvfrm_pos+0x1>
  456:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <wvfrm_pos>
  45a:	80 ed       	ldi	r24, 0xD0	; 208
- 45c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 45c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  460:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  464:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  468:	08 c0       	rjmp	.+16     	; 0x47a <__EEPROM_REGION_LENGTH__+0x7a>
@@ -1069,7 +1069,7 @@ Disassembly of section .text.__vector_17:
  49a:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <wvfrm_pos+0x1>
  49e:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <wvfrm_pos>
  4a2:	80 ed       	ldi	r24, 0xD0	; 208
- 4a4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 4a4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  4a8:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  4ac:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  4b0:	09 c0       	rjmp	.+18     	; 0x4c4 <__EEPROM_REGION_LENGTH__+0xc4>
@@ -1078,7 +1078,7 @@ Disassembly of section .text.__vector_17:
  4ba:	e8 5f       	subi	r30, 0xF8	; 248
  4bc:	fe 4f       	sbci	r31, 0xFE	; 254
  4be:	80 81       	ld	r24, Z
- 4c0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 4c0:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  4c4:	81 e0       	ldi	r24, 0x01	; 1
  4c6:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  4ca:	cc c0       	rjmp	.+408    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
@@ -1087,12 +1087,12 @@ Disassembly of section .text.__vector_17:
  4d4:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <wvfrm_len>
  4d8:	90 91 06 01 	lds	r25, 0x0106	; 0x800106 <wvfrm_len+0x1>
  4dc:	88 27       	eor	r24, r24
- 4de:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <_edata>
+ 4de:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  4e2:	82 2b       	or	r24, r18
  4e4:	90 93 06 01 	sts	0x0106, r25	; 0x800106 <wvfrm_len+0x1>
  4e8:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <wvfrm_len>
  4ec:	80 ed       	ldi	r24, 0xD0	; 208
- 4ee:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 4ee:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  4f2:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  4f6:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  4fa:	81 e0       	ldi	r24, 0x01	; 1
@@ -1100,7 +1100,7 @@ Disassembly of section .text.__vector_17:
  500:	b1 c0       	rjmp	.+354    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  502:	20 91 05 01 	lds	r18, 0x0105	; 0x800105 <wvfrm_len>
  506:	30 91 06 01 	lds	r19, 0x0106	; 0x800106 <wvfrm_len+0x1>
- 50a:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 50a:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  50e:	90 e0       	ldi	r25, 0x00	; 0
  510:	98 2f       	mov	r25, r24
  512:	88 27       	eor	r24, r24
@@ -1117,16 +1117,16 @@ Disassembly of section .text.__vector_17:
  530:	90 93 06 01 	sts	0x0106, r25	; 0x800106 <wvfrm_len+0x1>
  534:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <wvfrm_len>
  538:	80 ed       	ldi	r24, 0xD0	; 208
- 53a:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 53a:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  53e:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  542:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  546:	81 e0       	ldi	r24, 0x01	; 1
  548:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  54c:	8b c0       	rjmp	.+278    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 54e:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 54e:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  552:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <tick_reg>
  556:	80 ed       	ldi	r24, 0xD0	; 208
- 558:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 558:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  55c:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  560:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  564:	81 e0       	ldi	r24, 0x01	; 1
@@ -1135,7 +1135,7 @@ Disassembly of section .text.__vector_17:
  56c:	81 e0       	ldi	r24, 0x01	; 1
  56e:	80 93 ec 06 	sts	0x06EC, r24	; 0x8006ec <calc_crc8>
  572:	90 ed       	ldi	r25, 0xD0	; 208
- 574:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <_edata>
+ 574:	90 93 00 01 	sts	0x0100, r25	; 0x800100 <__DATA_REGION_ORIGIN__>
  578:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  57c:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  580:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
@@ -1143,7 +1143,7 @@ Disassembly of section .text.__vector_17:
  586:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <wvfrm_pos+0x1>
  58a:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <wvfrm_pos>
  58e:	80 ed       	ldi	r24, 0xD0	; 208
- 590:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 590:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  594:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  598:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  59c:	81 e0       	ldi	r24, 0x01	; 1
@@ -1160,50 +1160,50 @@ Disassembly of section .text.__vector_17:
  5bc:	8f 7d       	andi	r24, 0xDF	; 223
  5be:	80 93 07 01 	sts	0x0107, r24	; 0x800107 <status_reg>
  5c2:	80 ed       	ldi	r24, 0xD0	; 208
- 5c4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 5c4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  5c8:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  5cc:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  5d0:	81 e0       	ldi	r24, 0x01	; 1
  5d2:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  5d6:	46 c0       	rjmp	.+140    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 5d8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 5d8:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  5dc:	80 93 f1 06 	sts	0x06F1, r24	; 0x8006f1 <n_send>
  5e0:	80 ed       	ldi	r24, 0xD0	; 208
- 5e2:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 5e2:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  5e6:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  5ea:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  5ee:	81 e0       	ldi	r24, 0x01	; 1
  5f0:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  5f4:	37 c0       	rjmp	.+110    	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 5f6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 5f6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  5fa:	80 93 f0 06 	sts	0x06F0, r24	; 0x8006f0 <send_delay>
  5fe:	80 ed       	ldi	r24, 0xD0	; 208
- 600:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 600:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  604:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  608:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  60c:	81 e0       	ldi	r24, 0x01	; 1
  60e:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  612:	28 c0       	rjmp	.+80     	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 614:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 614:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  618:	80 93 ef 06 	sts	0x06EF, r24	; 0x8006ef <send_mode>
  61c:	80 ed       	ldi	r24, 0xD0	; 208
- 61e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 61e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  622:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  626:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  62a:	81 e0       	ldi	r24, 0x01	; 1
  62c:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  630:	19 c0       	rjmp	.+50     	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
- 632:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+ 632:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
  636:	80 93 ee 06 	sts	0x06EE, r24	; 0x8006ee <send_duration>
  63a:	80 ed       	ldi	r24, 0xD0	; 208
- 63c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 63c:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  640:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  644:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  648:	81 e0       	ldi	r24, 0x01	; 1
  64a:	80 93 e9 06 	sts	0x06E9, r24	; 0x8006e9 <send_spi>
  64e:	0a c0       	rjmp	.+20     	; 0x664 <__EEPROM_REGION_LENGTH__+0x264>
  650:	8d ef       	ldi	r24, 0xFD	; 253
- 652:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
+ 652:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
  656:	10 92 e8 06 	sts	0x06E8, r1	; 0x8006e8 <rw_request>
  65a:	10 92 ea 06 	sts	0x06EA, r1	; 0x8006ea <addr_ptr>
  65e:	81 e0       	ldi	r24, 0x01	; 1
