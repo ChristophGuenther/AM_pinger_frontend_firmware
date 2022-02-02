@@ -67,13 +67,13 @@ volatile uint8_t echo;
 #define CHRG		PORTC2 // turn on charge, output
 #define DONE		PORTC3 // charge done, input
 #define EPS_FB		PORTC4 // feedback ADC, input
-#define SW_IO		PORTC5 // connect piezo to emitter (1) / receiver (0), output
+#define SW_IO		PORTC5 // connect piezo to driver circuit (1) / receiver (0), output
 
 /* trigger definitions */
 // trigger/ time signal
 #define CAL_TIME PORTC0  // time signal to ICM, output
 #define GPIO_TRG PORTB0  // trigger from MMB, input
-#define CAL_TRIG PORTB1  // trigger from ICm, input
+#define CAL_TRIG PORTB1  // trigger from ICM, input
 
 // (init) function prototypes
 void init_SPI();		// initialize SPI (slave mode)
@@ -150,7 +150,7 @@ int main (void) {
     } // end while
 } // end main
 
-// initialize GPIOs
+// initialize GPIOs and set default state
 void init_GPIO () {
 	// full bridge port
 	OUT_DDR  = 0xFF;				// define as output
@@ -161,7 +161,7 @@ void init_GPIO () {
 	CTRL_PORT &= ~(1 << CAL_TIME);	// time signal low
 	CTRL_PORT &= ~(1 << DIS);		// default discharging
 	CTRL_PORT &= ~(1 << CHRG);		// charge off
-	CTRL_PORT |= (1 << SW_IO);		// connect to emitter
+	CTRL_PORT |= (1 << SW_IO);		// connect piezo to driver circuit
 	
 	// TRG port
 	DDRB &= ~(1 << PINB0); // GPIO_TRG as input
@@ -216,61 +216,58 @@ uint8_t crc8(uint8_t* addr, uint16_t len) {	// !!! Calculating CRC8 takes some t
 
 // waveform sending
 void wvfrm_out() {
-	uint8_t dt; // ticks per state
-	uint8_t dt_delay = send_delay; // delay after one waveform
-	uint16_t len = wvfrm_len;
+	uint8_t dt;								// ticks per state
+	uint8_t dt_delay = send_delay;			// delay after one waveform
+	uint16_t len = wvfrm_len;				// samples in one waveform
 	
-	// uint8_t is_connected = 0;
-	// if (status_reg & (1<<S_ENA)) is_connected = 1; ?? can be removed
-	// else is_connected = 0;
+	// maybe check if driver is connected and disconnect after sending..
 	
-	// continuous mode
+	// continuous mode (sending sine burst of specific frequency and length)
 	if (send_mode == 0x00) {
 		// Send waveform n times
 		uint16_t n_ticks_continuous = ( (send_duration&0x00FF) * 1000) / (1.25 * (tick_reg&0x00FF) + 0.72); // compute how many ticks are in wf duration, use calibration coefficients, double check this!
-		uint8_t j = 0; // jth waveform state
+		uint8_t j = 0;						// jth waveform state
 		
 		// loop over n waveforms
 		for (uint8_t n = 0; n < n_send; n++) {
-			dt_delay = send_delay; // set delay
-			PORTC |= (1 << CAL_TIME); // set cal time pin high during send
+			dt_delay = send_delay;			// set delay
+			PORTC |= (1 << CAL_TIME);		// set cal time pin high during send
 			// loop over waveform states
 			for (uint16_t i=0; i<n_ticks_continuous; i++) {
-				dt = tick_reg; // Set number of ticks
+				dt = tick_reg;				// Set number of ticks
 				if (j>3) j=0;
-				OUT_PORT = wvfrm_cont[j]; // apply output state to port
+				OUT_PORT = wvfrm_cont[j];	// apply output state to port
 				j++;
-				while (dt--) // hold state for dt microsec
-				_delay_us(1); // alternatively asm nop? [Lars]
+				while (dt--)				// hold state for dt microsec
+				_delay_us(1);				// alternatively asm nop? [Lars]
 			}
-			PORTC &= ~(1 << CAL_TIME); // set cal time pin low after sending a waveform
-			OUT_PORT = OUT_NEUTRAL; // set port to neutral again
+			PORTC &= ~(1 << CAL_TIME); // set cal time pin low after sending one waveform
 			while(dt_delay--) // delay after waveform
 			_delay_ms(1);
 		}
 	}
 	
-	// arbitrary waveform mode
+	// arbitrary waveform mode (sending stored waveform)
 	else if(send_mode == 0x01) {
 		// loop over n waveforms
 		for (uint8_t n = 0; n < n_send; n++) {
-			dt_delay = send_delay; // set delay
-			PORTC |= (1 << CAL_TIME); // set cal time pin high during send
+			dt_delay = send_delay;			// set delay
+			PORTC |= (1 << CAL_TIME);		// set cal time pin high during send
 			for (uint16_t i = 0; i < len; i++) {
-				dt = tick_reg;			// set number of ticks
-				OUT_PORT = wvfrm[i];	// apply output state to port
-				while (dt--)			// hold state for dt microsec
-				_delay_us(1);		// alternatively asm nop? [Lars]
+				dt = tick_reg;				// set number of ticks
+				OUT_PORT = wvfrm[i];		// apply output state to port
+				while (dt--)				// hold state for dt microsec
+				_delay_us(1);				// alternatively asm nop? [Lars]
 			}
-			PORTC &= ~(1 << CAL_TIME); // set cal time low after sending a waveform
-			OUT_PORT = OUT_NEUTRAL; // set port to neutral again
-			while(dt_delay--) // delay after waveform
+			PORTC &= ~(1 << CAL_TIME);		// set cal time low after sending one waveform
+			while(dt_delay--)				// delay after waveform
 			_delay_ms(1);
 		}
 	}
 	
 	// set output neutral again
 	OUT_PORT = OUT_NEUTRAL;
+	connect_driver();
 	
 	// auto discharge drivers and disconnect if requested
 	if ( status_reg & (1 << S_ADIS) ) {
