@@ -217,7 +217,7 @@ void wvfrm_out() {
 	uint16_t len = wvfrm_len;				// samples in one waveform
 	
 	// maybe check if driver is connected and disconnect after sending..
-	connect_driver();
+	connect_driver(); // connect driver before sending (hard bug fix)
 	
 	// continuous mode (sending sine burst of specific frequency and length)
 	if (send_mode == 0x00) {
@@ -239,6 +239,7 @@ void wvfrm_out() {
 				_delay_us(1);				// alternatively asm nop? [Lars]
 			}
 			PORTC &= ~(1 << CAL_TIME);		// set cal time pin low after sending one waveform
+			OUT_PORT = OUT_NEUTRAL;			// set output neutral after a waveform
 			while(dt_delay--)				// delay after waveform
 			_delay_ms(1);
 		}
@@ -257,14 +258,11 @@ void wvfrm_out() {
 				_delay_us(1);				// alternatively asm nop? [Lars]
 			}
 			PORTC &= ~(1 << CAL_TIME);		// set cal time low after sending one waveform
+			OUT_PORT = OUT_NEUTRAL;			// set output neutral after a waveform
 			while(dt_delay--)				// delay after waveform
 			_delay_ms(1);
 		}
 	}
-	
-	// set output neutral again
-	OUT_PORT = OUT_NEUTRAL;
-	// connect_driver();
 	
 	// auto discharge drivers and disconnect if requested
 	if ( status_reg & (1 << S_ADIS) ) {
